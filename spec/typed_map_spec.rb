@@ -26,6 +26,12 @@ RSpec.describe TypedMap do
         end
       end
     end
+
+    describe ".interface_method_names" do
+      it "returns list of public method names" do
+        expect(subject.interface_method_names).to eq %i[add keys [] has? count length to_a to_h]
+      end
+    end
   end
 
   describe "instance" do
@@ -140,6 +146,116 @@ RSpec.describe TypedMap do
           expect { subject.has? }.to       raise_error(ArgumentError).with_message("wrong number of arguments (0 for 1)")
           expect { subject.has? nil }.to   raise_error(ArgumentError).with_message("'k' should be an instance of Symbol")
           expect { subject.has? "key" }.to raise_error(ArgumentError).with_message("'k' should be an instance of Symbol")
+        end
+      end
+    end
+
+    describe "#count" do
+      context "when empty" do
+        it "returns 0" do
+          expect(subject.count).to be 0
+        end
+      end
+
+      context "when has one pair" do
+        before { subject.add :first, "first" }
+
+        it "returns 1" do
+          expect(subject.count).to be 1
+        end
+      end
+
+      context "when has three pairs" do
+        before do
+          subject.add :first, "first"
+          subject.add :second, "second"
+          subject.add :third, "third"
+        end
+
+        it "returns 3" do
+          expect(subject.count).to be 3
+        end
+      end
+    end
+
+    describe "#length" do
+      context "when empty" do
+        it "returns 0" do
+          expect(subject.length).to be 0
+        end
+      end
+
+      context "when has one pair" do
+        before { subject.add :first, "first" }
+
+        it "returns 1" do
+          expect(subject.length).to be 1
+        end
+      end
+
+      context "when has three pairs" do
+        before do
+          subject.add :first, "first"
+          subject.add :second, "second"
+          subject.add :third, "third"
+        end
+
+        it "returns 3" do
+          expect(subject.length).to be 3
+        end
+      end
+    end
+
+    describe "#to_a" do
+      context "when empty" do
+        it "returns empty array" do
+          expect(subject.to_a).to eq []
+        end
+      end
+
+      context "when has one pair" do
+        before { subject.add :first, "first" }
+
+        it "returns array with one pair" do
+          expect(subject.to_a).to eq [[:first, "first"]]
+        end
+      end
+
+      context "when hash many pairs" do
+        before do
+          subject.add :first, "first"
+          subject.add :second, "second"
+        end
+
+        it "returns array with many pairs" do
+          expect(subject.to_a).to eq [[:first, "first"], [:second, "second"]]
+        end
+      end
+    end
+
+    describe "#to_h" do
+      context "when empty" do
+        it "returns empty hash" do
+          expect(subject.to_h).to eq({})
+        end
+      end
+
+      context "when has one pair" do
+        before { subject.add :first, "first" }
+
+        it "returns hash with one pair" do
+          expect(subject.to_h).to eq({first: "first"})
+        end
+      end
+
+      context "when hash many pairs" do
+        before do
+          subject.add :first, "first"
+          subject.add :second, "second"
+        end
+
+        it "returns hash with many pairs" do
+          expect(subject.to_h).to eq({first: "first", second: "second"})
         end
       end
     end
