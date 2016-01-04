@@ -3,6 +3,14 @@ require "typed_map/version"
 class TypedMap
   attr_reader :ktype, :vtype
 
+  INTERFACE_METHOD_NAMES = %i[add keys [] has? count length to_a to_h].freeze
+
+  class << self
+    def interface_method_names
+      INTERFACE_METHOD_NAMES
+    end
+  end
+
   def initialize(ktype:, vtype:)
     raise ArgumentError, "'ktype' should be an instance of Class" unless ktype.instance_of?(Class)
     raise ArgumentError, "'vtype' should be an instance of Class" unless vtype.instance_of?(Class)
@@ -36,5 +44,19 @@ class TypedMap
     raise ArgumentError, "'k' should be an instance of #{ktype}" unless k.instance_of?(ktype)
 
     @map.has_key? k
+  end
+
+  def count
+    @map.count
+  end
+
+  alias :length :count
+
+  def to_a
+    @map.to_a
+  end
+
+  def to_h
+    @map.dup
   end
 end
